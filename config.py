@@ -14,7 +14,7 @@ def configure(env):
     "LuaJIT builds some tools to assist with the rest of the build. You can set the host CC to be used here in the case of cross compilation.", "gcc", ("gcc", "clang")))
 
     env_vars.Add(EnumVariable("luaapi_luaver",
-    "Build the LuaAPI module with the following lua VM", "5.4", ("5.4", "5.1", "jit")))
+    "Build the LuaAPI module with the following lua VM", "jit", ("5.4", "5.1", "jit")))
 
     env_vars.Update(env)
     Help(env_vars.GenerateHelpText(env))
