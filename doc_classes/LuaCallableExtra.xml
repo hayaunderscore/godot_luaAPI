@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<class name="LuaCallableExtra" inherits="RefCounted" version="4.1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../doc/class.xsd">
+<class name="LuaCallableExtra" inherits="RefCounted" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../doc/class.xsd">
 	<brief_description>
 		A tuple.
 	</brief_description>
@@ -8,44 +8,10 @@
 	</description>
 	<tutorials>
 	</tutorials>
-	<members>
-		<member name="tuple" type="bool" setter="set_tuple" getter="get_tuple" default="false">
-			Whether or not the last argument is a tuple.
-		</member>
-		<member name="wants_ref" type="bool" setter="set_wants_ref" getter="get_wants_ref" default="false">
-			Whether or not the function wants a reference to the LuaAPI object.
-		</member>
-		<member name="argc" type="int" setter="set_argc" getter="get_argc" default="0">
-			The TOTAL number of arguments excluding the tuple if there is one.
-		</member>
-	</members>
 	<methods>
-		<method name="with_tuple" qualifiers="static">
-			<return type="LuaCallableExtra" />
-			<param index="0" name="function" type="Callable" />
-			<param index="1" name="argc" type="int" />
-			<description>
-				Call the function with a tuple as the last argument. Argc is the TOTAL number of arguments excluding the tuple.
-			</description>
-		</method>
-		<method name="with_ref" qualifiers="static">
-			<return type="LuaCallableExtra" />
-			<param index="0" name="function" type="Callable" />
-			<description>
-				Call the function with a reference to the LuaAPI object as the first argument.
-			</description>
-		</method>
-		<method name="with_ref_and_tuple" qualifiers="static">
-			<return type="LuaCallableExtra" />
-			<param index="0" name="function" type="Callable" />
-			<param index="1" name="argc" type="int" />
-			<description>
-				Call the function with a reference to the LuaAPI object as the first argument and a tuple as the last argument. Argc is the TOTAL number of arguments excluding the tuple.
-			</description>
-		</method>
 		<method name="set_info">
 			<return type="void" />
-			<param index="0" name="function" type="Callable" />
+			<param index="0" name="Callable" type="Callable" />
 			<param index="1" name="argc" type="int" />
 			<param index="2" name="isTuple" type="bool" />
 			<param index="3" name="wantsRef" type="bool" />
@@ -53,5 +19,39 @@
 				Set CallableExtra info.
 			</description>
 		</method>
+		<method name="with_ref" qualifiers="static">
+			<return type="LuaCallableExtra" />
+			<param index="0" name="Callable" type="Callable" />
+			<description>
+				Call the function with a reference to the LuaAPI object as the first argument.
+			</description>
+		</method>
+		<method name="with_ref_and_tuple" qualifiers="static">
+			<return type="LuaCallableExtra" />
+			<param index="0" name="Callable" type="Callable" />
+			<param index="1" name="argc" type="int" />
+			<description>
+				Call the function with a reference to the LuaAPI object as the first argument and a tuple as the last argument. Argc is the TOTAL number of arguments excluding the tuple.
+			</description>
+		</method>
+		<method name="with_tuple" qualifiers="static">
+			<return type="LuaCallableExtra" />
+			<param index="0" name="Callable" type="Callable" />
+			<param index="1" name="argc" type="int" />
+			<description>
+				Call the function with a tuple as the last argument. Argc is the TOTAL number of arguments excluding the tuple.
+			</description>
+		</method>
 	</methods>
+	<members>
+		<member name="argc" type="int" setter="set_argc" getter="get_argc" default="0">
+			The TOTAL number of arguments excluding the tuple if there is one.
+		</member>
+		<member name="tuple" type="bool" setter="set_tuple" getter="get_tuple" default="false">
+			Whether or not the last argument is a tuple.
+		</member>
+		<member name="wants_ref" type="bool" setter="set_wants_ref" getter="get_wants_ref" default="false">
+			Whether or not the function wants a reference to the LuaAPI object.
+		</member>
+	</members>
 </class>

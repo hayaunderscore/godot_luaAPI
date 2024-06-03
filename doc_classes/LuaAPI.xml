@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<class name="LuaAPI" inherits="RefCounted" version="4.1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../doc/class.xsd">
+<class name="LuaAPI" inherits="RefCounted" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../doc/class.xsd">
 	<brief_description>
 		Execute Lua code at runtime and make your own API.
 	</brief_description>
@@ -9,25 +9,29 @@
 	<tutorials>
 	</tutorials>
 	<methods>
-		<method name="new_coroutine">
-			<return type="LuaCoroutine" />
-			<description>
-				This method will create a coroutine that is already bound to this runtime.
-			</description>
-		</method>
-		<method name="get_running_coroutine">
-			<return type="LuaCoroutine" />
-			<description>
-				Intended to be called from a lua hook. Returns the current running coroutine.
-			</description>
-		</method>
 		<method name="bind_libraries">
 			<return type="LuaError" />
-			<param index="0" name="Array" type="Array" />
+			<param index="0" name="Array" type="String[]" />
 			<description>
 				Bind lua libraries to the LuaAPI Object. 
 				Returns an error if a library fails to bind.
 				Note: in C#, the param Array must be a [code]Godot.Collections.Array[/code] and not a [code]System.Array[/code] class.
+			</description>
+		</method>
+		<method name="call_function">
+			<return type="Variant" />
+			<param index="0" name="LuaFunctionName" type="String" />
+			<param index="1" name="Args" type="Array" />
+			<description>
+				Calls a function inside current Lua state. This can be either a exposed function or a function defined with with Lua. You may want to check if the function actually exists with [code]function_exists(LuaFunctionName)[/code]. This function supports 1 return value from lua. It will be returned as a variant and if Lua returns no value it will be null. If an error occurs while calling this function, a LuaError object will be returned.
+			</description>
+		</method>
+		<method name="configure_gc">
+			<return type="int" />
+			<param index="0" name="What" type="int" />
+			<param index="1" name="Data" type="int" />
+			<description>
+				Controls the garbage collector. The option can be one of the following: [constant GC_STOP], [constant GC_RESTART], [constant GC_COLLECT], [constant GC_COUNT], [constant GC_STEP], [constant GC_SETPAUSE], [constant GC_SETSTEPMUL]. The data is the argument for the option. Returns the result of the option.
 			</description>
 		</method>
 		<method name="do_file">
@@ -36,7 +40,7 @@
 			<param index="1" name="Args" type="Array" default="[]" />
 			<description>
 				Loads a file with luaL_loadfile() passing its absolute path.
-				Similar to [code].do_string()[/code], this function loads a lua file into the LuaAPI Object and executes it as Lua. [code]FilePath[/code] must be an absolute path, and must exist or an error is returned.
+				Similar to [code].do_string()[/code], this function loads a lua file into the LuaAPI Object and executes it as Lua. [param FilePath] must be an absolute path, and must exist or an error is returned.
 			</description>
 		</method>
 		<method name="do_string">
@@ -52,15 +56,32 @@
 			<return type="bool" />
 			<param index="0" name="LuaFunctionName" type="String" />
 			<description>
-				Returns [code]true[/code] only if [code]LuaFunctionName[/code] is defined in the global environment table as a function.
+				Returns [code]true[/code] only if [param LuaFunctionName] is defined in the global environment table as a function.
 			</description>
 		</method>
-		<method name="call_function">
-			<return type="Variant" />
-			<param index="0" name="LuaFunctionName" type="String" />
-			<param index="1" name="Args" type="Array" />
+		<method name="get_memory_usage" qualifiers="const">
+			<return type="int" />
 			<description>
-				Calls a function inside current Lua state. This can be either a exposed function or a function defined with with Lua. You may want to check if the function actually exists with [code]function_exists(LuaFunctionName)[/code]. This function supports 1 return value from lua. It will be returned as a variant and if Lua returns no value it will be null. If an error occurs while calling this function, a LuaError object will be returned.
+				Returns the current memory usage of the state in bytes.
+			</description>
+		</method>
+		<method name="get_registry_value">
+			<return type="Variant" />
+			<param index="0" name="Name" type="String" />
+			<description>
+				Will pull a copy of a Variant from lua's registry table.
+			</description>
+		</method>
+		<method name="get_running_coroutine">
+			<return type="LuaCoroutine" />
+			<description>
+				Intended to be called from a lua hook. Returns the current running coroutine.
+			</description>
+		</method>
+		<method name="new_coroutine">
+			<return type="LuaCoroutine" />
+			<description>
+				This method will create a coroutine that is already bound to this runtime.
 			</description>
 		</method>
 		<method name="pull_variant">
@@ -76,14 +97,16 @@
 			<param index="1" name="var" type="Variant" />
 			<description>
 				Will push a copy of a Variant to lua as a global. Returns a error if the type is not supported.
-				Using [code].PushVariant[/code] in C# to push a function requires wrapping the Method in a [code]Callable[/code] first. In GDScript the wrapper is not needed. 
+				Using [code].PushVariant[/code] in C# to push a function requires wrapping the Method in a [Callable] first. In GDScript the wrapper is not needed.
 			</description>
 		</method>
-		<method name="get_registry_value">
-			<return type="Variant" />
-			<param index="0" name="Name" type="String" />
+		<method name="set_hook">
+			<return type="void" />
+			<param index="0" name="Hook" type="Callable" />
+			<param index="1" name="HookMask" type="int" />
+			<param index="2" name="Count" type="int" />
 			<description>
-				Will pull a copy of a Variant from lua's registry table.
+				Sets the hook for the state. The hook will be called on the events specified by the mask. The count specifies how many instructions should be executed before the hook is called. If count is 0, the hook will be called on every instruction. The hook will be called with the following arguments: [code]hook(parent, event, line)[/code]. The parent is the LuaAPI object that owns the current state.
 			</description>
 		</method>
 		<method name="set_registry_value">
@@ -94,44 +117,21 @@
 				Will push a copy of a Variant to lua's registry table. Returns a error if the type is not supported.
 			</description>
 		</method>
-		<method name="set_hook">
-			<return type="void" />
-			<param index="0" name="hook" type="Callable" />
-			<param index="1" name="mask" type="int" />
-			<param index="1" name="count" type="int" />
-			<description>
-				Sets the hook for the state. The hook will be called on the events specified by the mask. The count specifies how many instructions should be executed before the hook is called. If count is 0, the hook will be called on every instruction. The hook will be called with the following arguments: [code]hook(parent, event, line)[/code]. The parent is the LuaAPI object that owns the current state.
-			</description>
-		</method>
-		<method name="configure_gc">
-			<return type="int" />
-			<param index="0" name="option" type="int" />
-			<param index="1" name="data" type="int" />
-			<description>
-				Controls the garbage collector. The option can be one of the following: [code]GC_STOP[/code], [code]GC_RESTART[/code], [code]GC_COLLECT[/code], [code]GC_COUNT[/code], [code]GC_STEP[/code], [code]GC_SETPAUSE[/code], [code]GC_SETSTEPMUL[/code]. The data is the argument for the option. Returns the result of the option.
-			</description>
-		</method>
-		<method name="get_memory_usage">
-			<return type="int" />
-			<description>
-				Returns the current memory usage of the state in bytes.
-			</description>
-		</method>
 	</methods>
 	<members>
-		<member name="object_metatable" type="LuaObjectMetatable" setter="set_object_metatable" getter="get_object_metatable" default="LuaDefaultObjectMetatable">
-			This is the default LuaMetatable to use for object which do not define a lua_metatable field. By default it is a LuaDefaultObjectMetatable. You can change this to a custom metatable to change the behavior of all objects.
-		</member>
 		<member name="memory_limit" type="int" setter="set_memory_limit" getter="get_memory_limit" default="0">
 			Sets the memory limit for the state in bytes. If the limit is 0, there is no limit.
+		</member>
+		<member name="object_metatable" type="LuaObjectMetatable" setter="set_object_metatable" getter="get_object_metatable">
+			This is the default LuaMetatable to use for object which do not define a lua_metatable field. By default it is a LuaDefaultObjectMetatable. You can change this to a custom metatable to change the behavior of all objects.
 		</member>
 		<member name="use_callables" type="bool" setter="set_use_callables" getter="get_use_callables" default="true">
 			When true, Lua functions passed to Godot will use the LuaCallable type. This type is a CallableCustom which has issues currently with GDExtension and C#
 			When false, Lua functions passed to Godot will use the LuaFunctionRef type. This type is a RefCounted which behaves the same as a LuaCallable. But uses Invoke instead of Call.
+		</member>
 	</members>
 	<constants>
-		<constant name="GC_STOP" value="1" enum="HookMask">
-			Specifies on which events the hook will be called.
+		<constant name="HOOK_MASK_CALL" value="1" enum="HookMask">
 		</constant>
 		<constant name="HOOK_MASK_RETURN" value="2" enum="HookMask">
 			Specifies on which events the hook will be called.
@@ -142,9 +142,8 @@
 		<constant name="HOOK_MASK_COUNT" value="8" enum="HookMask">
 			Specifies on which events the hook will be called.
 		</constant>
-
 		<constant name="GC_STOP" value="0" enum="GCOption">
-			Stops the garbage collector.
+			Specifies on which events the hook will be called.
 		</constant>
 		<constant name="GC_RESTART" value="1" enum="GCOption">
 			Restarts the garbage collector.

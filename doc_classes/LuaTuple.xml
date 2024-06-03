@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<class name="LuaTuple" inherits="RefCounted" version="4.1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../doc/class.xsd">
+<class name="LuaTuple" inherits="RefCounted" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../doc/class.xsd">
 	<brief_description>
 		A Lua Tuple.
 	</brief_description>
@@ -9,39 +9,24 @@
 	<tutorials>
 	</tutorials>
 	<methods>
-		<method name="from_array" qualifiers="static">
-			<return type="LuaTuple" />
-			<param index="0" name="elms" type="Array" />
-			<description>
-				Create a LuaTuple from an array.
-			</description>
-		</method>
-		<method name="push_back">
-			<return type="void" />
-			<param index="0" name="var" type="Variant" />
-			<description>
-				Push Variant to back of tuple.
-			</description>
-		</method>
-		<method name="push_front">
-			<return type="void" />
-			<param index="0" name="var" type="Variant" />
-			<description>
-				Push Variant to front of tuple.
-			</description>
-		</method>
-		<method name="set_value">
-			<return type="void" />
-			<param index="0" name="index" type="int" />
-			<param index="1" name="var" type="Variant" />
-			<description>
-				Set value at index.
-			</description>
-		</method>
 		<method name="clear">
 			<return type="void" />
 			<description>
 				Clear tuple.
+			</description>
+		</method>
+		<method name="from_array" qualifiers="static">
+			<return type="LuaTuple" />
+			<param index="0" name="Array" type="Array" />
+			<description>
+				Create a LuaTuple from an array.
+			</description>
+		</method>
+		<method name="get_value">
+			<return type="Variant" />
+			<param index="0" name="Index" type="int" />
+			<description>
+				Get value at index.
 			</description>
 		</method>
 		<method name="is_empty">
@@ -62,11 +47,31 @@
 				Pop Variant from front of tuple.
 			</description>
 		</method>
-		<method name="get_value">
-			<return type="Variant" />
-			<param index="0" name="index" type="int" />
+		<method name="push_back">
+			<return type="void" />
+			<param index="0" name="var" type="Variant" />
 			<description>
-				Get value at index.
+				Push Variant to back of tuple.
+			</description>
+		</method>
+		<method name="push_front">
+			<return type="void" />
+			<param index="0" name="var" type="Variant" />
+			<description>
+				Push Variant to front of tuple.
+			</description>
+		</method>
+		<method name="set_value">
+			<return type="void" />
+			<param index="0" name="Index" type="int" />
+			<param index="1" name="var" type="Variant" />
+			<description>
+				Set value at index.
+			</description>
+		</method>
+		<method name="size">
+			<return type="int" />
+			<description>
 			</description>
 		</method>
 		<method name="to_array">
