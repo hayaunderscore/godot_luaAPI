@@ -258,7 +258,7 @@ jobs:
           mv ${{ github.workspace }}/project/addons/ ${{ github.workspace }}/project/container/addons/
           mv ${{ github.workspace }}/project/demo/ ${{ github.workspace }}/project/container/demo/
       - name: Upload artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: gdextension
           path: |
@@ -479,7 +479,7 @@ jobs:
           mv ${{ github.workspace }}/project/addons/ ${{ github.workspace }}/project/container/addons/
           mv ${{ github.workspace }}/project/demo/ ${{ github.workspace }}/project/container/demo/
       - name: Upload artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: gdextension-LuaJIT
           path: |
