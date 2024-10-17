@@ -363,14 +363,14 @@ jobs:
             target: template_release
             platform: android
             arch: arm64
-            should-build: ${{ inputs.fullbuild }}
+            should-build: true
           - identifier: android-debug (arm64)
             name: Android (arm64) - template_debug
             runner: ubuntu-20.04
             target: template_debug
             platform: android
             arch: arm64
-            should-build: ${{ inputs.fullbuild }}
+            should-build: true
         exclude:
           - {opts: {should-build: false}}
 
