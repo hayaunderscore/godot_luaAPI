@@ -104,13 +104,13 @@ jobs:
           #   platform: android
           #   arch: arm64
           #   should-build: ${{ inputs.fullbuild }}
-          # - identifier: android-debug (arm64)
-          #   name: Android (arm64) - template_debug
-          #   runner: ubuntu-20.04
-          #   target: template_debug
-          #   platform: android
-          #   arch: arm64
-          #   should-build: ${{ inputs.fullbuild }}
+          - identifier: android-debug (arm64)
+            name: Android (arm64) - template_debug
+            runner: ubuntu-20.04
+            target: template_debug
+            platform: android
+            arch: arm64
+            should-build: ${{ inputs.fullbuild }}
 
           - identifier: macos-release (universal)
             name: MacOS (universal) - template_release
