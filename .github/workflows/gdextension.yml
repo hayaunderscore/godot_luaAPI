@@ -343,6 +343,34 @@ jobs:
             platform: macos
             arch: universal
             should-build: ${{ inputs.fullbuild }}
+          - identifier: android-release (x86_64)
+            name: Android (x86_64) - template_release
+            runner: ubuntu-20.04
+            target: template_release
+            platform: android
+            arch: x86_64
+            should-build: ${{ inputs.fullbuild }}
+          - identifier: android-debug (x86_64)
+            name: Android (x86_64) - template_debug
+            runner: ubuntu-20.04
+            target: template_debug
+            platform: android
+            arch: x86_64
+            should-build: ${{ inputs.fullbuild }}
+          - identifier: android-release (arm64)
+            name: Android (arm64) - template_release
+            runner: ubuntu-20.04
+            target: template_release
+            platform: android
+            arch: arm64
+            should-build: ${{ inputs.fullbuild }}
+          - identifier: android-debug (arm64)
+            name: Android (arm64) - template_debug
+            runner: ubuntu-20.04
+            target: template_debug
+            platform: android
+            arch: arm64
+            should-build: ${{ inputs.fullbuild }}
         exclude:
           - {opts: {should-build: false}}
 
@@ -358,6 +386,13 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt install gcc-multilib g++-multilib
+
+      - name: Set up Java 11 (Android)
+        if: matrix.opts.platform == 'android'
+        uses: actions/setup-java@v3
+        with:
+          distribution: temurin
+          java-version: 11
 
       - name: (Windows) Install mingw64
         if: ${{ startsWith(matrix.opts.identifier, 'windows-') }}
